@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>高级粉白任务中心 - RPG个人网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-pink: #ff9aa2; /* 主粉色 */
+            --soft-pink: #ffd1dc; /* 柔粉色 */
+            --light-pink: #fff0f5; /* 浅粉色 */
+            --white: #fffafb; /* 高级白 */
+            --accent-pink: #ff6f61; /* 强调粉色 */
+            --shadow: 0 4px 20px rgba(255, 154, 162, 0.15); /* 柔和阴影 */
+            --gradient: linear-gradient(135deg, #ff9aa2 0%, #ffd1dc 100%); /* 渐变背景 */
+            --border-radius: 20px; /* 圆角 */
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--white);
+            color: #4a4a4a;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 高级粉白任务面板 */
+        .task-panel {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--soft-pink);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-panel::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: var(--gradient);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .task-header i {
+            color: var(--accent-pink);
+            font-size: 1.8em;
+            background: var(--light-pink);
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+        }
+
+        /* 高级任务列表 */
+        .task-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .task-item {
+            background: var(--light-pink);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            border-left: 5px solid var(--primary-pink);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .task-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .task-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            color: var(--accent-pink);
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* 高级任务标签 */
+        .task-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-right: 8px;
+            background: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .category-work { color: #ff6f61; }
+        .category-study { color: #6a1b9a; }
+        .category-life { color: #00bcd4; }
+
+        /* 高级按钮 */
+        .rpg-button {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 12px 30px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rpg-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%) rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .rpg-button:hover::after {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+
+        .rpg-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 111, 97, 0.3);
+        }
+
+        /* 高级弹窗 */
+        .task-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 154, 162, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .task-modal-content {
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            width: 500px;
+            max-width: 90%;
+            position: relative;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--soft-pink);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            color: var(--accent-pink);
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        /* 新增动画 */
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .task-item:hover .task-icon {
+            animation: float 1.5s ease-in-out infinite;
+        }
+
+        /* 滚动条样式 */
+        .task-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .task-list::-webkit-scrollbar-track {
+            background: var(--light-pink);
+            border-radius: 4px;
+        }
+
+        .task-list::-webkit-scrollbar-thumb {
+            background: var(--primary-pink);
+            border-radius: 4px;
+        }
+
+        .task-list::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-pink);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 角色信息侧边栏保持不变 -->
+        <div class="character-panel">
+            <!-- 原有角色信息内容 -->
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 任务查看区域 -->
+            <div class="task-panel">
+                <div class="task-header">
+                    <i class="fas fa-scroll"></i>
+                    <h3>任务日志</h3>
+                </div>
+                <div class="task-list" id="taskList">
+                    <!-- 任务项将通过JavaScript动态添加 -->
+                </div>
+            </div>
+
+            <!-- 任务发布区域 -->
+            <div class="task-panel">
+                <div class="task-header">
+                    <i class="fas fa-quill"></i>
+                    <h3>发布新任务</h3>
+                </div>
+                <form class="task-form" id="taskForm">
+                    <div class="form-group">
+                        <label for="taskTitle">任务标题</label>
+                        <input type="text" id="taskTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">任务描述</label>
+                        <textarea id="taskDescription"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskCategory">任务分类</label>
+                        <select id="taskCategory">
+                            <option value="work">工作</option>
+                            <option value="study">学习</option>
+                            <option value="life">生活</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriority">优先级</label>
+                        <select id="taskPriority">
+                            <option value="high">高</option>
+                            <option value="medium">中</option>
+                            <option value="low">低</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDueDate">截止日期</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+                    <div class="form-actions">
+                        <button type="reset" class="rpg-button">重置</button>
+                        <button type="submit" class="rpg-button">发布任务</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 任务详情弹窗 -->
+    <div class="task-modal" id="taskModal">
+        <div class="task-modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // 任务数据
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+        // 渲染任务列表
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = tasks.map(task => `
+                <div class="task-item" data-id="${task.id}">
+                    <div class="task-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="task-content">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-meta">
+                            <span class="task-category category-${task.category}">
+                                ${getCategoryLabel(task.category)}
+                            </span>
+                            ${task.dueDate ? `<span>📅 ${task.dueDate}</span>` : ''}
+                            <span class="task-priority priority-${task.priority}">
+                                <i class="fas fa-flag"></i> ${task.priority}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="task-status status-${task.status}">
+                        ${task.status === 'pending' ? '进行中' : '已完成'}
+                    </div>
+                </div>
+            `).join('');
+
+            // 添加点击事件
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.addEventListener('click', () => showTaskDetails(item.dataset.id));
+            });
+        }
+
+        // 显示任务详情
+        function showTaskDetails(taskId) {
+            const task = tasks.find(t => t.id == taskId);
+            const modalContent = `
+                <h3>${task.title}</h3>
+                <div class="task-details">
+                    <p><strong>描述:</strong> ${task.description}</p>
+                    <p><strong>分类:</strong> ${getCategoryLabel(task.category)}</p>
+                    <p><strong>优先级:</strong> ${task.priority}</p>
+                    ${task.dueDate ? `<p><strong>截止日期:</strong> ${task.dueDate}</p>` : ''}
+                    <p><strong>状态:</strong> ${task.status === 'pending' ? '进行中' : '已完成'}</p>
+                </div>
+                <div class="task-actions">
+                    <button class="rpg-button" onclick="toggleTaskStatus(${taskId})">
+                        ${task.status === 'pending' ? '标记完成' : '标记未完成'}
+                    </button>
+                    <button class="rpg-button" onclick="deleteTask(${taskId})">删除任务</button>
+                </div>
+            `;
+            document.getElementById('modalContent').innerHTML = modalContent;
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+
+        // 切换任务状态
+        function toggleTaskStatus(taskId) {
+            const task = tasks.find(t => t.id == taskId);
+            task.status = task.status === 'pending' ? 'completed' : 'pending';
+            saveTasks();
+            renderTasks();
+            closeModal();
+        }
+
+        // 删除任务
+        function deleteTask(taskId) {
+            tasks = tasks.filter(t => t.id != taskId);
+            saveTasks();
+            renderTasks();
+            closeModal();
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+
+        // 获取分类标签
+        function getCategoryLabel(category) {
+            switch(category) {
+                case 'work': return '工作';
+                case 'study': return '学习';
+                case 'life': return '生活';
+                default: return '其他';
+            }
+        }
+
+        // 保存任务到本地存储
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // 添加新任务
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newTask = {
+                id: tasks.length ? tasks[tasks.length - 1].id + 1 : 1,
+                title: document.getElementById('taskTitle').value,
+                description: document.getElementById('taskDescription').value,
+                category: document.getElementById('taskCategory').value,
+                priority: document.getElementById('taskPriority').value,
+                dueDate: document.getElementById('taskDueDate').value,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+
+            tasks.push(newTask);
+            saveTasks();
+            renderTasks();
+            this.reset();
+        });
+
+        // 关闭弹窗事件
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('task-modal')) {
+                closeModal();
+            }
+        });
+
+        // 初始化渲染
+        renderTasks();
+    </script>
+</body>
+</html>
