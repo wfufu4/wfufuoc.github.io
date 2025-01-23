@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圣光王女阿莉安娜</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --primary-pink: #ffb3c6;
+          --secondary-pink: #7a1c33;
+          --cream-white: #fff0f3;
+          --gold-accent: #c89b3c;
+          --shadow-color: rgba(100, 50, 50, 0.2);
+        }
+
+        /* 全局样式 */
+        body {
+          background: 
+            linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+            url('https://img.freepik.com/free-photo/old-paper-texture-background_1373-431.jpg');
+          font-family: 'MedievalSharp', cursive;
+          min-height: 100vh;
+          margin: 0;
+          padding: 20px;
+        }
+
+        /* 游戏容器 */
+        #game-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          position: relative;
+        }
+
+        /* 中世纪边框 */
+        .border-effect {
+          position: fixed;
+          border: 50px solid transparent;
+          border-image: url('https://opengameart.org/sites/default/files/styles/medium/public/border1.png') 80 round;
+          top: -10px;
+          left: -10px;
+          right: -10px;
+          bottom: -10px;
+          pointer-events: none;
+          z-index: -1;
+        }
+
+        /* 角色卡 */
+        .character-card {
+          display: flex;
+          background: 
+            url('https://img.freepik.com/free-photo/vintage-old-paper-background_53876-88628.jpg'),
+            linear-gradient(145deg, var(--cream-white), var(--primary-pink));
+          border-radius: 15px;
+          box-shadow: 0 8px 16px var(--shadow-color);
+          padding: 20px;
+          margin: 20px 0;
+          gap: 20px;
+          border: 3px solid var(--gold-accent);
+          position: relative;
+        }
+
+        /* 角色立绘 */
+        .portrait {
+          width: 200px;
+          height: 300px;
+          border: 3px solid var(--gold-accent);
+          border-radius: 10px;
+          background: 
+            url('https://cdn.pixabay.com/photo/2023/04/15/16/12/fantasy-7928479_1280.png') center/cover;
+          box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+          transition: transform 0.3s;
+        }
+
+        /* 状态显示 */
+        .stats h2 {
+          color: var(--secondary-pink);
+          font-family: 'Cinzel Decorative', cursive;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+          margin: 0 0 15px 0;
+        }
+
+        .attribute-bar {
+          display: flex;
+          gap: 20px;
+          margin-bottom: 15px;
+        }
+
+        /* 对话系统 */
+        .dialogue-box {
+          background: 
+            url('https://img.freepik.com/free-photo/old-paper-texture-background_1373-431.jpg'),
+            linear-gradient(145deg, var(--cream-white), var(--primary-pink));
+          padding: 25px;
+          border-radius: 15px;
+          border: 2px solid var(--gold-accent);
+          box-shadow: 0 8px 16px var(--shadow-color);
+          margin: 20px 0;
+          animation: float 3s ease-in-out infinite;
+        }
+
+        /* 按钮样式 */
+        button {
+          background: 
+            url('https://cdn.pixabay.com/photo/2017/03/23/12/33/quill-2167843_1280.png') 15px center/25px no-repeat,
+            linear-gradient(145deg, var(--secondary-pink), #4a1020);
+          color: var(--cream-white);
+          padding: 15px 30px 15px 50px;
+          border: none;
+          border-radius: 5px;
+          margin: 10px;
+          font-family: 'MedievalSharp', cursive;
+          font-size: 1.1em;
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        /* 动画效果 */
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+
+        @keyframes dropIn {
+          0% { opacity: 0; transform: translateY(-50px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 魔法粒子 */
+        .magic-particle {
+          position: absolute;
+          width: 8px;
+          height: 8px;
+          background: radial-gradient(circle, gold 50%, transparent 100%);
+          animation: twinkle 1.5s infinite;
+          pointer-events: none;
+        }
+
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 1; }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+          .character-card { flex-direction: column; align-items: center; }
+          .portrait { width: 150px; height: 200px; }
+          button { padding: 12px 24px 12px 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="border-effect"></div>
+    <div id="game-container">
+        <!-- 角色信息 -->
+        <div class="character-card">
+            <div class="portrait"></div>
+            <div class="stats">
+                <h2>阿莉安娜·冯·奥古斯都</h2>
+                <div class="attribute-bar">
+                    <span class="hp">❤️ <span id="hp-value">320</span>/320</span>
+                    <span class="mp">🔮 <span id="mp-value">150</span>/150</span>
+                </div>
+                <div class="traits" id="character-traits"></div>
+            </div>
+        </div>
+
+        <!-- 对话系统 -->
+        <div id="dialogue-container">
+            <div class="dialogue-box">
+                <h3 id="speaker-name">阿莉安娜</h3>
+                <p id="dialogue-text">欢迎来到圣光王国</p>
+                <div id="choice-buttons"></div>
+            </div>
+        </div>
+
+        <!-- 系统菜单 -->
+        <div class="system-menu">
+            <button onclick="game.saveGame()">💾 保存进度</button>
+            <button onclick="game.loadGame()">🎮 读取进度</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据
+        const gameData = {
+            scenes: {
+                prologue: {
+                    id: "prologue",
+                    character: "阿莉安娜",
+                    text: "父王的病日渐沉重...那些贵族们已经开始蠢蠢欲动。我必须...",
+                    choices: [
+                        {
+                            text: "前往大圣堂祈祷",
+                            nextScene: "chap1-church",
+                            effects: { faith: 5 }
+                        },
+                        {
+                            text: "召见近卫队长",
+                            nextScene: "chap1-guard",
+                            effects: { loyalty: 3 }
+                        }
+                    ]
+                },
+                "chap1-church": {
+                    id: "chap1-church",
+                    character: "大主教",
+                    text: "王女殿下，圣光会指引您的道路...",
+                    choices: [
+                        {
+                            text: "接受祝福",
+                            nextScene: "chap2",
+                            effects: { hp: +50 }
+                        }
+                    ]
+                }
+            }
+        };
+
+        // 游戏引擎
+        class GameEngine {
+            constructor() {
+                this.playerData = {
+                    hp: 320,
+                    mp: 150,
+                    traits: ['holy', 'leadership'],
+                    progress: {}
+                };
+                this.loadScene('prologue');
+                this.initEffects();
+                this.initAudio();
+            }
+
+            initEffects() {
+                // 创建魔法粒子
+                for(let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'magic-particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 2 + 's';
+                    document.body.appendChild(particle);
+                }
+            }
+
+            initAudio() {
+                this.audio = {
+                    click: new Audio('https://freesound.org/data/previews/541/541277_11861866-lq.mp3'),
+                    magic: new Audio('https://freesound.org/data/previews/511/511518_9251557-lq.mp3')
+                };
+            }
+
+            loadScene(sceneId) {
+                this.currentScene = gameData.scenes[sceneId];
+                this.renderScene();
+            }
+
+            renderScene() {
+                document.getElementById('speaker-name').textContent = this.currentScene.character;
+                document.getElementById('dialogue-text').textContent = this.currentScene.text;
+                
+                const choicesContainer = document.getElementById('choice-buttons');
+                choicesContainer.innerHTML = this.currentScene.choices
+                    .map((choice, index) => `
+                        <button onclick="game.handleChoice(${index})">
+                            ${choice.text}
+                        </button>
+                    `).join('');
+            }
+
+            handleChoice(index) {
+                this.audio.click.play();
+                const choice = this.currentScene.choices[index];
+                
+                if (choice.effects) this.applyEffects(choice.effects);
+                if (choice.nextScene) this.loadScene(choice.nextScene);
+                
+                this.updateStatusDisplay();
+            }
+
+            applyEffects(effects) {
+                Object.entries(effects).forEach(([key, value]) => {
+                    this.playerData.progress[key] = (this.playerData.progress[key] || 0) + value;
+                    if(key === 'hp') this.playerData.hp = Math.min(320, this.playerData.hp + value);
+                });
+            }
+
+            updateStatusDisplay() {
+                document.getElementById('hp-value').textContent = this.playerData.hp;
+                document.getElementById('mp-value').textContent = this.playerData.mp;
+                document.getElementById('character-traits').innerHTML = this.playerData.traits
+                    .map(trait => `
+                        <span style="
+                            display: inline-block;
+                            margin: 5px;
+                            padding: 5px 10px;
+                            background: ${trait === 'holy' ? 'radial-gradient(circle, gold, #c89b3c)' : 'radial-gradient(circle, #7a1c33, #4a1020)'};
+                            border-radius: 15px;
+                            color: white;
+                            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                        ">
+                            ${trait === 'holy' ? '✨ 圣光加护' : '👑 王族威仪'}
+                        </span>
+                    `).join('');
+            }
+
+            saveGame() {
+                this.audio.magic.play();
+                const saveData = {
+                    timestamp: new Date().toISOString(),
+                    scene: this.currentScene.id,
+                    playerData: this.playerData
+                };
+                localStorage.setItem('AriannaSave', JSON.stringify(saveData));
+                alert('游戏进度已保存！');
+            }
+
+            loadGame() {
+                const saveData = JSON.parse(localStorage.getItem('AriannaSave'));
+                if (saveData) {
+                    this.playerData = saveData.playerData;
+                    this.loadScene(saveData.scene);
+                    this.updateStatusDisplay();
+                    alert('存档读取成功！');
+                } else {
+                    alert('没有找到存档记录！');
+                }
+            }
+        }
+
+        // 初始化游戏
+        const game = new GameEngine();
+    </script>
+</body>
+</html>
