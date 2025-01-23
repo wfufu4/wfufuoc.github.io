@@ -190,3 +190,133 @@
     </script>
 </body>
 </html>
+<!-- 在body末尾container的后面添加以下代码 -->
+<div class="music-player">
+    <audio id="bgm">
+        <source src="你的背景音乐URL.mp3" type="audio/mpeg">
+        您的浏览器不支持音频播放
+    </audio>
+    <div class="player-controls">
+        <button id="playBtn" class="rpg-button">
+            <i class="fas fa-play"></i>
+        </button>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+        <span class="time">0:00</span>
+        <div class="volume-control">
+            <i class="fas fa-volume-up"></i>
+            <input type="range" min="0" max="1" step="0.1" value="1">
+        </div>
+    </div>
+</div>
+
+<style>
+/* 新增音乐播放器样式 */
+.music-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 30px;
+    box-shadow: 0 5px 20px rgba(255,179,198,0.2);
+    width: 300px;
+    z-index: 1000;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-container {
+    flex: 1;
+    height: 4px;
+    background: #ffe5ec;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.progress-bar {
+    width: 0;
+    height: 100%;
+    background: var(--accent-color);
+    border-radius: 2px;
+    transition: width 0.1s linear;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.volume-control input[type="range"] {
+    width: 60px;
+    height: 4px;
+    accent-color: var(--accent-color);
+    cursor: pointer;
+}
+
+.time {
+    font-size: 0.9em;
+    color: var(--accent-color);
+    min-width: 40px;
+}
+
+/* 播放按钮动画 */
+#playBtn:hover i {
+    transform: scale(1.1);
+}
+</style>
+
+<script>
+const audio = document.getElementById('bgm');
+const playBtn = document.getElementById('playBtn');
+const progressBar = document.querySelector('.progress-bar');
+const timeDisplay = document.querySelector('.time');
+const volumeControl = document.querySelector('.volume-control input');
+
+// 播放/暂停控制
+playBtn.addEventListener('click', () => {
+    if (audio.paused) {
+        audio.play();
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    } else {
+        audio.pause();
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
+});
+
+// 更新进度条
+audio.addEventListener('timeupdate', () => {
+    const progress = (audio.currentTime / audio.duration) * 100;
+    progressBar.style.width = `${progress}%`;
+    
+    // 时间显示格式化
+    const minutes = Math.floor(audio.currentTime / 60);
+    const seconds = Math.floor(audio.currentTime % 60);
+    timeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+});
+
+// 点击进度条跳转
+document.querySelector('.progress-container').addEventListener('click', (e) => {
+    const rect = e.target.getBoundingClientRect();
+    const pos = (e.clientX - rect.left) / rect.width;
+    audio.currentTime = pos * audio.duration;
+});
+
+// 音量控制
+volumeControl.addEventListener('input', (e) => {
+    audio.volume = e.target.value;
+});
+
+// 音乐结束重置
+audio.addEventListener('ended', () => {
+    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+    progressBar.style.width = '0%';
+    timeDisplay.textContent = '0:00';
+});
+</script>
