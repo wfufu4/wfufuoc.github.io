@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>王女阿莉安娜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ffb6c1;  /* 浅粉色 */
+            --secondary-color: #fff0f5; /* 雾白色 */
+            --accent-color: #db7093;    /* 蔷薇色 */
+        }
+
+        body {
+            margin: 0;
+            background: var(--secondary-color) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==');
+            font-family: 'MedievalSharp', cursive;
+            color: #634f5c;
+        }
+
+        /* 花纹边框 */
+        .ornate-frame {
+            border: 3px solid var(--accent-color);
+            position: relative;
+            padding: 20px;
+            margin: 20px;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 0 15px rgba(219, 112, 147, 0.3);
+        }
+
+        .ornate-frame::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border: 2px dashed var(--primary-color);
+            z-index: -1;
+        }
+
+        header {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            color: var(--accent-color);
+            text-shadow: 2px 2px 0px white;
+            font-size: 3rem;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .character-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .character-img {
+            width: 200px;
+            height: 300px;
+            border: 3px solid var(--accent-color);
+            border-radius: 10px;
+            margin-right: 2rem;
+            background: url('https://via.placeholder.com/200x300/ffb6c1/ffffff?text=Arianna') center/cover;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            border-bottom-color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(219, 112, 147, 0.5);
+        }
+
+        .story-section {
+            column-count: 2;
+            column-gap: 3rem;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .character-card {
+                flex-direction: column;
+            }
+            .character-img {
+                margin: 0 0 1rem 0;
+            }
+            .story-section {
+                column-count: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="ornate-frame">
+        <h1>玫瑰与剑的传说</h1>
+        <p>阿莉安娜王女的冒险史诗</p>
+    </header>
+
+    <nav>
+        <a href="#story">故事背景</a>
+        <a href="#characters">人物介绍</a>
+        <a href="#gallery">皇家画廊</a>
+    </nav>
+
+    <div class="main-content">
+        <section id="story" class="ornate-frame">
+            <h2>⚔️ 王国史诗</h2>
+            <div class="story-section">
+                <p>...</p>
+                <p>...</p>
+                <p>...</p>
+            </div>
+        </section>
+
+        <section id="characters" class="ornate-frame">
+            <h2>👑 皇室成员</h2>
+            <div class="character-card">
+                <div class="character-img"></div>
+                <div>
+                    <h3>阿莉安娜</h3>
+                    <p>年龄：16岁</p>
+                    <p>称号：黎明玫瑰</p>
+                    <p>特殊能力：圣光魔法/古代语解读</p>
+                    <p>随身物：母亲遗留的匕首</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="ornate-frame" style="text-align: center; margin: 2rem;">
+        <p>© 纪元 302 年 帝国皇家档案馆</p>
+    </footer>
+</body>
+</html>
