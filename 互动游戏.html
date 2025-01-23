@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圣光王女阿莉安娜</title>
+    <style>
+        /* 内联CSS */
+        :root {
+          --primary-pink: #FFB6C1;
+          --secondary-pink: #FF69B4;
+          --cream-white: #FFF5EE;
+          --gold-accent: #D4AF37;
+          --shadow-color: rgba(0,0,0,0.1);
+        }
+
+        body {
+          background: linear-gradient(45deg, var(--primary-pink), var(--cream-white));
+          font-family: 'Palatino Linotype', serif;
+          padding: 20px;
+        }
+
+        #game-container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .character-card {
+          display: flex;
+          background: rgba(255,255,255,0.9);
+          border-radius: 15px;
+          box-shadow: 0 8px 16px var(--shadow-color);
+          padding: 20px;
+          margin-bottom: 20px;
+          gap: 20px;
+        }
+
+        .portrait {
+          width: 200px;
+          height: 300px;
+          border: 3px solid var(--gold-accent);
+          border-radius: 10px;
+          background-size: cover;
+        }
+
+        .stats h2 {
+          color: var(--secondary-pink);
+          margin: 0 0 10px 0;
+        }
+
+        .attribute-bar {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 10px;
+        }
+
+        .dialogue-box {
+          background: linear-gradient(145deg, var(--cream-white), var(--primary-pink));
+          padding: 25px;
+          border-radius: 15px;
+          border: 2px solid var(--gold-accent);
+          animation: float 3s ease-in-out infinite;
+          margin-top: 20px;
+        }
+
+        button {
+          background: var(--secondary-pink);
+          color: white;
+          border: none;
+          padding: 12px 24px;
+          border-radius: 25px;
+          margin: 5px;
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+
+        button:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+
+        .hidden { display: none; }
+        .system-menu { position: fixed; top: 20px; right: 20px; }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+          .character-card { flex-direction: column; }
+          .portrait { width: 150px; height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div class="character-card">
+            <div class="portrait" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=')"></div>
+            <div class="stats">
+                <h2>阿莉安娜·冯·奥古斯都</h2>
+                <div class="attribute-bar">
+                    <span class="hp">❤️ <span id="hp-value">320</span>/320</span>
+                    <span class="mp">🔮 <span id="mp-value">150</span>/150</span>
+                </div>
+                <div class="traits" id="character-traits"></div>
+            </div>
+        </div>
+
+        <div id="dialogue-container" class="hidden">
+            <div class="dialogue-box">
+                <h3 id="speaker-name"></h3>
+                <p id="dialogue-text"></p>
+                <div id="choice-buttons"></div>
+            </div>
+        </div>
+
+        <div class="system-menu">
+            <button onclick="game.saveGame()">💾 保存</button>
+            <button onclick="game.loadGame()">🎮 读取</button>
+        </div>
+    </div>
+
+    <script>
+        // 内联游戏数据
+        const gameData = {
+            scenes: {
+                prologue: {
+                    id: "prologue",
+                    character: "阿莉安娜",
+                    text: "父王的病日渐沉重...那些贵族们已经开始蠢蠢欲动。我必须...",
+                    choices: [
+                        {
+                            text: "前往大圣堂祈祷",
+                            nextScene: "chap1-church",
+                            effects: {faith: 5}
+                        },
+                        {
+                            text: "召见近卫队长",
+                            nextScene: "chap1-guard",
+                            effects: {loyalty: 3}
+                        }
+                    ]
+                },
+                "chap1-church": {
+                    id: "chap1-church",
+                    character: "大主教",
+                    text: "王女殿下，圣光会指引您的道路...",
+                    choices: [
+                        {
+                            text: "接受祝福",
+                            nextScene: "chap2",
+                            effects: {hp: +50}
+                        }
+                    ]
+                }
+            }
+        };
+
+        // 游戏逻辑
+        class GameEngine {
+            constructor() {
+                this.playerData = {
+                    hp: 320,
+                    mp: 150,
+                    traits: ['holy', 'leadership'],
+                    progress: {}
+                };
+                this.loadScene('prologue');
+                this.updateStatusDisplay();
+            }
+
+            loadScene(sceneId) {
+                this.currentScene = gameData.scenes[sceneId];
+                this.renderScene();
+            }
+
+            renderScene() {
+                document.getElementById('speaker-name').textContent = 
+                    this.currentScene.character;
+                document.getElementById('dialogue-text').textContent = 
+                    this.currentScene.text;
+                
+                const choicesContainer = document.getElementById('choice-buttons');
+                choicesContainer.innerHTML = this.currentScene.choices
+                    .map((choice, index) => `
+                        <button onclick="game.handleChoice(${index})">
+                            ${choice.text}
+                        </button>
+                    `).join('');
+                
+                document.getElementById('dialogue-container').classList.remove('hidden');
+            }
+
+            handleChoice(index) {
+                const choice = this.currentScene.choices[index];
+                if (choice.effects) this.applyEffects(choice.effects);
+                if (choice.nextScene) this.loadScene(choice.nextScene);
+            }
+
+            applyEffects(effects) {
+                Object.entries(effects).forEach(([key, value]) => {
+                    this.playerData.progress[key] = (this.playerData.progress[key] || 0) + value;
+                });
+                this.updateStatusDisplay();
+            }
+
+            updateStatusDisplay() {
+                document.getElementById('hp-value').textContent = this.playerData.hp;
+                document.getElementById('mp-value').textContent = this.playerData.mp;
+                document.getElementById('character-traits').innerHTML = 
+                    this.playerData.traits.map(trait => `
+                        <span style="margin-right:10px;padding:5px;background:${trait === 'holy' ? 'gold' : 'purple'};color:white">
+                            ${trait === 'holy' ? '✨ 圣光加护' : '👑 王族威仪'}
+                        </span>
+                    `).join('');
+            }
+
+            saveGame() {
+                const saveData = {
+                    timestamp: new Date().toISOString(),
+                    scene: this.currentScene.id,
+                    playerData: this.playerData
+                };
+                localStorage.setItem('AriannaSave', JSON.stringify(saveData));
+                alert('游戏已保存！');
+            }
+
+            loadGame() {
+                const saveData = JSON.parse(localStorage.getItem('AriannaSave'));
+                if (saveData) {
+                    this.playerData = saveData.playerData;
+                    this.loadScene(saveData.scene);
+                    this.updateStatusDisplay();
+                    alert('存档读取成功！');
+                } else {
+                    alert('没有找到存档！');
+                }
+            }
+        }
+
+        // 初始化游戏
+        const game = new GameEngine();
+        window.game = game;
+    </script>
+</body>
+</html>
