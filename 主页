@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>阿莉安娜的个站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffb3c6;  /* 樱花粉 */
+            --secondary-color: #fff0f3; /* 浅粉白 */
+            --accent-color: #ff4d6d;   /* 强调色 */
+        }
+
+        body {
+            font-family: 'Segoe UI', cursive;
+            background: var(--secondary-color);
+            margin: 0;
+            padding: 20px;
+            color: #4a4a4a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 角色侧边栏 */
+        .character-panel {
+            width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(255,179,198,0.3);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--primary-color);
+            margin: 0 auto 20px;
+        }
+
+        .stats-bar {
+            background: #ffe5ec;
+            height: 8px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .stats-fill {
+            background: var(--accent-color);
+            height: 100%;
+            border-radius: 4px;
+            width: 75%;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+        }
+
+        .quest-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .skill-tree {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .skill-node {
+            background: var(--secondary-color);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .skill-node:hover {
+            transform: scale(1.05);
+        }
+
+        /* 交互元素 */
+        .rpg-button {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rpg-button:hover {
+            background: var(--accent-color);
+            box-shadow: 0 3px 10px rgba(255,77,109,0.3);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .character-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 角色信息侧边栏 -->
+        <div class="character-panel">
+            <img src="https://via.placeholder.com/150" class="avatar" alt="角色头像">
+            <h2>艾米丽·开发者</h2>
+            <p>职业：全栈冒险者</p>
+            
+            <div class="stats">
+                <h3>角色属性</h3>
+                <p>编程能力 <span>85%</span></p>
+                <div class="stats-bar">
+                    <div class="stats-fill"></div>
+                </div>
+                
+                <p>设计天赋 <span>78%</span></p>
+                <div class="stats-bar">
+                    <div class="stats-fill" style="width: 78%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 任务日志 -->
+            <div class="quest-card">
+                <h3><i class="fas fa-scroll"></i> 当前任务</h3>
+                <ul>
+                    <li>► 调戏神父（进度75%）</li>
+                    <li>► 学习魔法（进度30%）</li>
+                    <li>► 每日练习（3/5完成）</li>
+                </ul>
+            </div>
+
+            <!-- 技能树 -->
+            <div class="quest-card">
+                <h3><i class="fas fa-code-branch"></i> 技能树</h3>
+                <div class="skill-tree">
+                    <div class="skill-node">魅力</div>
+                    <div class="skill-node">智力</div>
+                    <div class="skill-node">力量</div>
+                    <div class="skill-node">魔法</div>
+                    <div class="skill-node">奥数</div>
+                    <div class="skill-node">睡觉</div>
+                </div>
+            </div>
+
+            <!-- 背包系统 -->
+            <div class="quest-card">
+                <h3><i class="fas fa-backpack"></i> 开发装备</h3>
+                <div class="skill-tree">
+                    <div class="skill-node">
+                        <i class="fab fa-apple"></i>
+                        <p>MacBook Pro</p>
+                    </div>
+                    <div class="skill-node">
+                        <i class="fas fa-coffee"></i>
+                        <p>咖啡 x ∞</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单交互示例
+        document.querySelectorAll('.skill-node').forEach(node => {
+            node.addEventListener('click', () => {
+                node.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
