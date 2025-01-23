@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>蔷薇王庭 - 阿莉安娜</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffb3c6;
+            --secondary-color: #fff0f3;
+            --accent-color: #ff4d6d;
+            --gold-color: #ffd700;
+            --text-color: #4a4a4a;
+        }
+
+        body {
+            font-family: 'Georgia', cursive;
+            background: var(--secondary-color) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==');
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        /* 左侧属性栏增强 */
+        .attributes-panel {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 25px rgba(255,179,198,0.15);
+            border: 2px solid var(--primary-color);
+            height: fit-content;
+        }
+
+        .attribute-item {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--secondary-color);
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .attribute-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        /* 新增天赋系统 */
+        .talents-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .talent-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 15px;
+            border: 2px solid var(--primary-color);
+            transition: transform 0.3s;
+        }
+
+        .talent-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .talent-icon {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* 任务系统增强 */
+        .quest-objectives {
+            margin-top: 1rem;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: center;
+            margin: 0.8rem 0;
+            padding: 0.8rem;
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        .objective-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
+        .objective-completed .objective-check {
+            background: var(--accent-color);
+        }
+
+        /* 其他保持原有优化 */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧属性栏 -->
+        <aside class="attributes-panel">
+            <h2><i class="fas fa-shield-alt"></i> 角色属性</h2>
+            
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div>
+                    <h4>生命值</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%"></div>
+                    </div>
+                    <small>1520/1900</small>
+                </div>
+            </div>
+
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div>
+                    <h4>行动力</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%"></div>
+                    </div>
+                    <small>9/20</small>
+                </div>
+            </div>
+
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div>
+                    <h4>元素亲和</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 68%"></div>
+                    </div>
+                    <small>光系 Lv.5</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间主内容 -->
+        <main class="main-content">
+            <!-- 天赋系统 -->
+            <div class="decorated-box">
+                <h2><i class="fas fa-star"></i> 皇家天赋</h2>
+                <div class="talents-grid">
+                    <div class="talent-card">
+                        <div class="talent-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h4>王权领域</h4>
+                        <p>半径30米内友军攻击+15%</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                        <small>熟练度：Lv.3</small>
+                    </div>
+
+                    <div class="talent-card">
+                        <div class="talent-icon">
+                            <i class="fas fa-hand-sparkles"></i>
+                        </div>
+                        <h4>圣光治愈</h4>
+                        <p>单体治疗+200%效果</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                        <small>熟练度：Lv.5</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 任务系统 -->
+            <div class="decorated-box">
+                <h2><i class="fas fa-scroll"></i> 当前任务</h2>
+                <div class="quest-item">
+                    <h3>圣堂的试炼</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                    
+                    <div class="quest-objectives">
+                        <div class="objective-item">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>找到失落的圣典（0/1）</p>
+                                <small>图书馆东南角书柜</small>
+                            </div>
+                        </div>
+
+                        <div class="objective-item objective-completed">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>净化被污染的水源</p>
+                                <small>已完成</small>
+                            </div>
+                        </div>
+
+                        <div class="objective-item">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>击败守护者（2/3）</p>
+                                <small>地下祭坛区域</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-rewards">
+                        <h4>任务奖励：</h4>
+                        <div style="display: flex; gap: 1rem;">
+                            <div class="reward-item">
+                                <i class="fas fa-coins"></i>
+                                <small>500金币</small>
+                            </div>
+                            <div class="reward-item">
+                                <i class="fas fa-shield"></i>
+                                <small>圣光护符</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 右侧背包系统（保持原有优化） -->
+    </div>
+
+    <script>
+        // 任务目标交互
+        document.querySelectorAll('.objective-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('objective-completed');
+                // 更新任务进度计算
+                updateQuestProgress();
+            });
+        });
+
+        function updateQuestProgress() {
+            const total = document.querySelectorAll('.objective-item').length;
+            const completed = document.querySelectorAll('.objective-completed').length;
+            const progress = (completed / total * 100).toFixed(0);
+            document.querySelector('.progress-fill').style.width = `${progress}%`;
+        }
+    </script>
+</body>
+</html>
