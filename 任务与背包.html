@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>蔷薇王庭 - 阿莉安娜</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffb3c6;
+            --secondary-color: #fff0f3;
+            --accent-color: #ff4d6d;
+            --gold-color: #ffd700;
+            --text-color: #4a4a4a;
+        }
+
+        body {
+            font-family: 'Georgia', cursive;
+            background: var(--secondary-color) url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzhhYWGMYAEYB8RmROaABADeOQ8CXl/xfgAAAABJRU5ErkJggg==');
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .decorated-box {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 25px rgba(255,179,198,0.15);
+            border: 2px solid var(--primary-color);
+        }
+
+        .decorated-box::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px dashed var(--accent-color);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* 任务系统 */
+        .quest-item {
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: transform 0.3s;
+        }
+
+        .quest-item:hover {
+            transform: translateX(10px);
+            background: linear-gradient(90deg, #fff0f3, #ffffff);
+        }
+
+        .quest-item:nth-child(1) .progress-fill {
+            background: linear-gradient(90deg, #ff6b6b, #ff8787);
+        }
+
+        .quest-item:nth-child(2) .progress-fill {
+            background: linear-gradient(90deg, #8a2be2, #9400d3);
+        }
+
+        .dragon-icon {
+            color: #8a2be2;
+            text-shadow: 0 0 5px rgba(138,43,226,0.3);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #ffe5ec;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .quest-objectives {
+            margin-top: 1rem;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            background: var(--secondary-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0.5rem 0;
+        }
+
+        .objective-item:hover {
+            background: rgba(255,77,109,0.1);
+        }
+
+        .objective-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            margin-right: 1rem;
+            position: relative;
+        }
+
+        .objective-check::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .objective-completed .objective-check::after {
+            opacity: 1;
+        }
+
+        .quest-rewards {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px dashed var(--primary-color);
+        }
+
+        .reward-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--secondary-color);
+            border-radius: 8px;
+            margin-right: 0.5rem;
+        }
+
+        /* 背包系统 */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .inventory-slot {
+            aspect-ratio: 1;
+            background: var(--secondary-color);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .inventory-slot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255,77,109,0.2);
+        }
+
+        .inventory-slot::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 15px;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <main class="main-content">
+            <div class="decorated-box" style="text-align: center">
+                <img src="https://i.postimg.cc/TPC4pK1k/arianna.png" 
+                     style="width: 200px; height: 200px; border-radius: 50%; border: 5px solid var(--primary-color)">
+                <h2>阿莉安娜·冯·奥古斯都</h2>
+                <p>蔷薇王庭第一王女</p>
+            </div>
+
+            <div class="decorated-box">
+                <h2><i class="fas fa-scroll"></i> 当前任务</h2>
+                
+                <!-- 圣堂的试炼 -->
+                <div class="quest-item">
+                    <h3><i class="fas fa-church"></i> 圣堂的试炼</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                    <div class="quest-objectives">
+                        <div class="objective-item">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>找到失落的圣典（0/1）</p>
+                                <small>图书馆东南角书柜</small>
+                            </div>
+                        </div>
+                        <div class="objective-item objective-completed">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>净化被污染的水源</p>
+                                <small>已完成</small>
+                            </div>
+                        </div>
+                        <div class="objective-item">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>击败守护者（2/3）</p>
+                                <small>地下祭坛区域</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quest-rewards">
+                        <h4>任务奖励：</h4>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                            <div class="reward-item">
+                                <i class="fas fa-coins"></i>
+                                <small>500金币</small>
+                            </div>
+                            <div class="reward-item">
+                                <i class="fas fa-shield"></i>
+                                <small>圣光护符</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 龙族盟约 -->
+                <div class="quest-item">
+                    <h3><i class="fas fa-dragon dragon-icon"></i> 龙族盟约</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%"></div>
+                    </div>
+                    <div class="quest-objectives">
+                        <div class="objective-item">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>收集龙晶石（3/5）</p>
+                                <small>火山区域采集</small>
+                            </div>
+                        </div>
+                        <div class="objective-item">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>修复古老祭坛</p>
+                                <small>需要石匠工具</small>
+                            </div>
+                        </div>
+                        <div class="objective-item">
+                            <div class="objective-check"></div>
+                            <div>
+                                <p>取得龙族印记</p>
+                                <small>龙穴深处</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quest-rewards">
+                        <h4>任务奖励：</h4>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                            <div class="reward-item">
+                                <i class="fas fa-coins"></i>
+                                <small>1500金币</small>
+                            </div>
+                            <div class="reward-item">
+                                <i class="fas fa-shield-alt dragon-icon"></i>
+                                <small>龙鳞铠甲</small>
+                            </div>
+                            <div class="reward-item">
+                                <i class="fas fa-dragon dragon-icon"></i>
+                                <small>坐骑契约</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="decorated-box">
+            <h2><i class="fas fa-backpack"></i> 皇家行囊</h2>
+            <div class="inventory-grid">
+                <div class="inventory-slot">
+                    <i class="fas fa-gem fa-2x" style="color:#ff69b4"></i>
+                    <small>星辉宝石</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-book-open fa-2x"></i>
+                    <small>古魔法书</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-flask fa-2x"></i>
+                    <small>圣水 x5</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-dragon fa-2x dragon-icon"></i>
+                    <small>龙晶石 x3</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-hammer fa-2x" style="color:#808080"></i>
+                    <small>石匠工具</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-vial fa-2x" style="color:#4169e1"></i>
+                    <small>净化药剂</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-shield fa-2x" style="color:#ffd700"></i>
+                    <small>圣光护符</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-key fa-2x" style="color:#daa520"></i>
+                    <small>地宫钥匙</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-scroll fa-2x" style="color:#8b4513"></i>
+                    <small>古老卷轴</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-bread-slice fa-2x" style="color:#d2b48c"></i>
+                    <small>精灵面包 x3</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-apple-alt fa-2x" style="color:#ff4500"></i>
+                    <small>金苹果 x2</small>
+                </div>
+                <div class="inventory-slot">
+                   <i class="fas fa-cheese fa-2x" style="color:#ffd700"></i>
+                   <small>山羊奶酪</small>
+                </div>
+                <div class="inventory-slot">
+                    <i class="fas fa-campground fa-2x" style="color:#8b4513"></i>
+                    <small>便携帐篷</small>
+               </div>
+               <div class="inventory-slot">
+                   <i class="fas fa-mug-hot fa-2x" style="color:#6b8e23"></i>
+                   <small>锡制水壶</small>
+              </div>
+              <div class="inventory-slot">
+                  <i class="fas fa-fire fa-2x" style="color:#ff6347"></i>
+                  <small>永燃火把</small>
+             </div>
+             <div class="inventory-slot">
+                 <i class="fas fa-rope fa-2x" style="color:#a0522d"></i>
+                 <small>蛛丝绳索</small>
+             </div>
+             <div class="inventory-slot">
+                 <i class="fas fa-coins fa-2x" style="color:#daa520"></i>
+                <small>钱袋(32金)</small>
+            </div>
+            <div class="inventory-slot">
+                <i class="fas fa-clock fa-2x" style="color:#4682b4"></i>
+                <small>怀表</small>
+           </div>
+           <div class="inventory-slot">
+              <i class="fas fa-bed fa-2x" style="color:#9370db"></i>
+              <small>羽绒睡袋</small>
+           </div>
+        <div class="inventory-slot">
+            <i class="fas fa-utensils fa-2x" style="color:#cd853f"></i>
+            <small>旅行炊具</small>
+        </div>
+        <div class="inventory-slot">
+            <i class="fas fa-seedling fa-2x" style="color:#2e8b57"></i>
+            <small>草药包</small>
+        </div>
+        <div class="inventory-slot">
+            <i class="fas fa-kitchen-set fa-2x" style="color:#808080"></i>
+            <small>修理工具</small>
+        </div>
+        <div class="inventory-slot">
+            <i class="fas fa-pen-fancy fa-2x" style="color:#4b0082"></i>
+            <small>旅者日记</small>
+        </div>
+        <div class="inventory-slot">
+            <i class="fas fa-umbrella-beach fa-2x" style="color:#00bfff"></i>
+            <small>油纸伞</small>
+        </div>
+    </div>
+</aside>
+
+<!-- 在样式部分新增以下物品颜色定义 -->
+<style>
+.inventory-slot .fa-bread-slice { color: #d2b48c; }
+.inventory-slot .fa-apple-alt { color: #ff4500; }
+.inventory-slot .fa-cheese { color: #ffd700; }
+.inventory-slot .fa-campground { color: #8b4513; }
+.inventory-slot .fa-mug-hot { color: #6b8e23; }
+.inventory-slot .fa-fire { color: #ff6347; }
+.inventory-slot .fa-rope { color: #a0522d; }
+.inventory-slot .fa-coins { color: #daa520; }
+.inventory-slot .fa-clock { color: #4682b4; }
+.inventory-slot .fa-bed { color: #9370db; }
+.inventory-slot .fa-utensils { color: #cd853f; }
+.inventory-slot .fa-seedling { color: #2e8b57; }
+.inventory-slot .fa-kitchen-set { color: #808080; }
+.inventory-slot .fa-pen-fancy { color: #4b0082; }
+.inventory-slot .fa-umbrella-beach { color: #00bfff; }
+</style>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        document.querySelectorAll('.objective-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const wasCompleted = this.classList.contains('objective-completed');
+                this.classList.toggle('objective-completed');
+                
+                const questItem = this.closest('.quest-item');
+                updateQuestProgress(questItem);
+                
+                if(!wasCompleted && this.classList.contains('objective-completed')) {
+                    handleObjectiveCompletion(this, questItem);
+                }
+            });
+        });
+
+        function updateQuestProgress(questItem) {
+            const total = questItem.querySelectorAll('.objective-item').length;
+            const completed = questItem.querySelectorAll('.objective-completed').length;
+            const progress = Math.min(100, (completed / total * 100).toFixed(0));
+            
+            questItem.querySelector('.progress-fill').style.width = `${progress}%`;
+            
+            if(completed === total) {
+                const rewards = questItem.querySelectorAll('.reward-item');
+                const inventory = document.querySelector('.inventory-grid');
+                
+                rewards.forEach(reward => {
+                    const iconClass = reward.querySelector('i').className;
+                    const itemName = reward.querySelector('small').textContent;
+                    
+                    if(!document.querySelector(`.inventory-slot ${iconClass}`)) {
+                        const newItem = document.createElement('div');
+                        newItem.className = 'inventory-slot';
+                        newItem.innerHTML = `
+                            ${reward.querySelector('i').outerHTML.replace('fa-', 'fa-2x ')}
+                            <small>${itemName}</small>
+                        `;
+                        inventory.prepend(newItem);
+                    }
+                });
+            }
+        }
+
+        function handleObjectiveCompletion(objective, questItem) {
+            const objectiveText = objective.querySelector('p').textContent;
+            
+            if(questItem.querySelector('.fa-dragon')) {
+                // 龙族任务处理
+                if(objectiveText.includes('龙晶石')) {
+                    const dragonstone = document.querySelector('.fa-dragon').parentElement;
+                    const count = parseInt(dragonstone.querySelector('small').textContent.match(/\d+/)[0]);
+                    dragonstone.querySelector('small').textContent = `龙晶石 x${count + 1}`;
+                }
+                
+                if(objectiveText.includes('修复祭坛')) {
+                    document.querySelector('.fa-hammer').parentElement.remove();
+                }
+            }
+            
+            if(questItem.querySelector('.fa-church')) {
+                // 圣堂任务处理
+                if(objectiveText.includes('圣典')) {
+                    const scroll = document.createElement('div');
+                    scroll.className = 'inventory-slot';
+                    scroll.innerHTML = `
+                        <i class="fas fa-book fa-2x" style="color:#8b0000"></i>
+                        <small>圣典残页</small>
+                    `;
+                    document.querySelector('.inventory-grid').prepend(scroll);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
